@@ -1,14 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
-
-/*
-{
-    "user-id": "uuid-4",
-    "datetime": "YYYY-MM-DD",
-    "location": "GPS-Location",
-    "hash": "hash-check"
-
-}
-*/
+import { Schema, model } from 'mongoose';
 
 interface Alert {
     user_id: string;
@@ -24,18 +14,4 @@ const alertSchema = new Schema<Alert>({
     hash: { type: String, required: true }
 });
 
-const Alert = model<Alert>('Alert', alertSchema);
-
-run().catch(err => console.log(err));
-
-async function run() {
-
-    const testAlert = new Alert({
-        name: 'Bill',
-        email: 'bill@initech.com',
-        avatar: 'https://i.imgur.com/dM7Thhn.png'
-    });
-    await testAlert.save();
-
-    console.log(alert.name); // 'bill@initech.com'
-}
+export const Alert = model<Alert>('Alert', alertSchema);
