@@ -14,6 +14,7 @@ export interface Configuration {
     // Generics
     PORT: string;
     ENVIRONMENT: string;
+    NODE_ENV: string | null; 
 
     LOG_MODE: Log_Level;
     LOG_FILE: string;
@@ -57,6 +58,7 @@ export const Config: Configuration = {
     // Generics
     PORT: process.env.PORT || "8080",
     ENVIRONMENT: process.env.ENV || "dev",
+    NODE_ENV: process.env.NODE_ENV|| null, 
 
     LOG_MODE: logMode,
     LOG_FILE: process.env.LOG_FILE!,

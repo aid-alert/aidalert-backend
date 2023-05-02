@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import {Alert} from '../models/alertSchema';
 
 export const alertGet = (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).json({"status": "200 ok", "message": "No Alert to see"});
+    res.status(200)
+    res.json({"status": "200 ok", "message": "No Alert to see"});
 } 
 
 export const alertPost = async (req: Request, res: Response, next: NextFunction) => {
