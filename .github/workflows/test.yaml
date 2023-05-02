@@ -19,18 +19,18 @@ concurrency:
 
 jobs:
   aid-alert-pipeline:
-    runs-on: self-hosted
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Test Docker
+      - name: Setup Dockerfile
+        uses: ./ # Uses an action in the root directory
         id: hello
-        uses: actions/hello-world-docker-action@v2
         with:
           who-to-greet: 'Mona the Octocat'
-
+      
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
-
+        
         
