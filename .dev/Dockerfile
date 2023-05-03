@@ -4,9 +4,6 @@ COPY ../. /rootDir
 
 WORKDIR /rootDir/app
 
-ARG NODE_ENV=test
-ENV NODE_ENV=$NODE_ENV
-
 RUN npm install
 RUN npm build
 
