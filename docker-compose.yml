@@ -1,0 +1,38 @@
+---
+version: '3.9'
+
+volumes:
+  mongodb:
+    driver: local
+
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: dockerfile
+    image: "aid_alert-backend:$(TAG_NUM)"
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8000
+      ENVIRONMENT: "${ENVIRONMENT}"
+      LOG_MODE: "{LOG_MODE}"
+      LOG_FILE: "${LOG_FILE}"
+      DATABASE_URL: "${DATABASE_URL}"
+      DATABASE_URI_TYPE: "${DATABASE_URI_TYPE}"
+      DATABASE_USER: "${DATABASE_USER}"
+      DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+      DATABASE_NAME: "${DATABASE_NAME}"
+  mongo:
+    image: mongo:latest
+    volumes:
+      - "mongodb:/data/db"
+    command: >
+      mongosh --host localhost -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} 
+        --authenticationDatabase ${DATABASE_USER} ${DATABASE_NAME}"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${DATABASE_ROOT_PASSWORD}"
+      MONGO_INITDB_ROOT_PASSWORD: "${DATABASE_ROOT_PASSWORD}"
+      MONGO_INITDB_DATABASE: "${DATABASE_NAME}"
+      DATABASE_USER: "${DATABASE_USER}"
+      DATABASE_NAME: "${DATABASE_NAME}"

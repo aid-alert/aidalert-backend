@@ -1,16 +1,16 @@
-FROM node:latest AS builder
+FROM node:latest
 
 COPY ./app /app
 
 WORKDIR /app
 
-ARG NODE_ENV=production
-ENV NODE_ENV=$NODE_ENV
-
-RUN npm install
+RUN npm i
 RUN npm run build
 
 RUN rm -rf node_modules
+
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
 RUN npm ci
 
 CMD [ "node", "/app/index.js" ]
