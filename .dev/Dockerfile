@@ -1,8 +1,8 @@
 FROM node:18
 
-COPY ../. /rootDir
+COPY ../. /dir
 
-WORKDIR /rootDir/app
+WORKDIR /app
 
 RUN npm install
 RUN npm build

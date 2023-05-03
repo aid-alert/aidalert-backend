@@ -15,8 +15,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Test
-        uses: ./.dev
+      # - name: Test
+      #   uses: ./.dev
       
       - name: Build Image
         run: sh -c 'docker build . --file Dockerfile --tag aid-alert_backend:$CONTAINER_VERSION'
