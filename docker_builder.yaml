@@ -1,0 +1,9 @@
+# action.yml
+name: 'Node Backend Build'
+description: 'Build the docker-backend container'
+outputs:
+  time: # id of output
+    description: 'The time we greeted you'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
