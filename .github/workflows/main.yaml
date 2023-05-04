@@ -58,7 +58,7 @@ jobs:
     steps:
       - name: Start new containers
         run: | 
-          sh -c 'docker run \
+          docker run \
           -e PORT=$PORT \
           -e ENVIRONMENT=$ENVIRONMENT \
           -e LOG_MODE=$LOG_MODE \
@@ -69,10 +69,9 @@ jobs:
           -e DAATABASE_PASSWORD=$DATABASE_PASSWORD \
           -e DATABASE_NAME=$DATABASE_NAME \
           --name=$CONTAINER_NAME \
-          --publish 8080:8080 \
-          --expose 8080
+          -p 8080:8080 \
           --detach \
-          $CONTAINER_NAME:$CONTAINER_VERSION'
+          $CONTAINER_NAME:$CONTAINER_VERSION
         env:
           PORT: ${{ secrets.PORT || vars.PORT }} 
           ENVIRONMENT: ${{ secrets.ENVIRONMENT || vars.ENVIRONMENT }} 
