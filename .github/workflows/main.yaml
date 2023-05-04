@@ -15,9 +15,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set variable date
+        run: date +%s
+        
+
       - name: Dump GitHub context
         id: github_context_step
-        run: echo '${{ toJSON(env) }}'
+        run: echo '${{ toJSON(vars) }}'
 
       # - name: Test
       #   uses: ./.dev
