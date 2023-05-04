@@ -37,7 +37,7 @@ jobs:
             echo "available=false" >> $GITHUB_OUTPUT;
           fi
 
-  clean-and-build:
+  clean:
     runs-on: self-hosted
     name: Clean old container and build the new one.
     needs: setup
@@ -49,7 +49,11 @@ jobs:
       - name: Remove old container
         run: docker rm aid_alert-backend
         #if: needs.setup.outputs.num_cont > 1
-      
+  build: 
+    runs-on: self-hosted
+    name: Build docker container.
+    needs: setup
+    steps:
       - name: Docker build
         run: docker build . --tag=$container_name:${{ needs.setup.outputs.date }}
   
@@ -58,6 +62,7 @@ jobs:
     name: Deploy the new container.
     needs:
       - setup
+      - build
     steps:
       - name: Start new containers
         run: | 
