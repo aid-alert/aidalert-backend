@@ -24,9 +24,9 @@ jobs:
         id: get_docker_info
         run: echo "num_cont=$(docker ps | wc -l)" >> $GITHUB_OUTPUT
 
-      - name: Stop old container
+      - name: Stop and remove old container
         if: ${{ steps.get_docker_info.outputs.num_cont > 1 }} 
-        run: sh -c 'docker stop aid_alert-backend'
+        run: sh -c 'docker stop aid_alert-backend && docker rm aid_alert-backend'
       
       - name: Docker build
         run: docker build . --tag=aid-alert_backend:${{ steps.get_date.outputs.date }}
