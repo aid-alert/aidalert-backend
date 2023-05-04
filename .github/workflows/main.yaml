@@ -15,7 +15,7 @@ jobs:
     outputs:
       date: ${{ steps.get_date.outputs.date }}
       num_cont: ${{ steps.get_docker_info.outputs.num_cont }}
-      container_existence: ${{ steps.get_container_info.outputs.}}
+      container_existence: ${{ steps.get_container_info.outputs.existence }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
