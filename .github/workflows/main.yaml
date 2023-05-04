@@ -59,7 +59,7 @@ jobs:
       - setup
     steps:
       - name: Docker build
-        run: docker build . --tag=$container_name:${{ needs.setup.outputs.date }}
+        run: docker build . --tag=$container_name:${{ github.sha }}
   
   deploy:
     runs-on: self-hosted
