@@ -9,17 +9,25 @@ jobs:
     runs-on: self-hosted
     name: Test and Build docker containers
     environment: Default
+    outputs:
+      date: ${{ steps.get_date.outputs.date }}
+      num_cont: ${{ steps.get_docker_info.outputs.num_cont }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Set variable date
-        run: date +%s
+        run: echo "date=$(date +%s)" >> $GITHUB_OUTPUT
         id: get_date
       
       - name: Check if docker container exists
         id: get_docker_info
-        run: sh -c "num_cont=$(docker ps | wc -l); echo $num_cont >> $GITHUB_OUTPUT"
+        run: echo "num_cont=$(docker ps | wc -l)" >> $GITHUB_OUTPUT
+      
+      - name: check if it works
+        env:
+          OUTPUT1: ${{ build-and-deploy.outputs.num_cont }}
+        run: echo "$OUTPUT1"
 
       - name: Stop old container
         run: sh -c 'echo ${{ steps.get_docker_info.outputs.num_cont }} && docker stop aid_alert-backend'
