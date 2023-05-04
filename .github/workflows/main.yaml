@@ -35,14 +35,14 @@ jobs:
         run: | 
           sh -c 'docker run \
           -e PORT=$PORT \
-          ENVIRONMENT=$ENVIRONMENT \
-          LOG_MODE=$LOG_MODE \
-          LOG_FILE=$LOG_FILE \
-          DATABASE_URL=$DATABASE_URL \
-          DATABASE_URI_TYPE=$DATABASE_URI_TYPE \
-          DATABASE_USER=$DATABASE_USER \
-          DAATABASE_PASSWORD=$DATABASE_PASSWORD \
-          DATABASE_NAME=$DATABASE_NAME \
+          -e ENVIRONMENT=$ENVIRONMENT \
+          -e LOG_MODE=$LOG_MODE \
+          -e LOG_FILE=$LOG_FILE \
+          -e DATABASE_URL=$DATABASE_URL \
+          -e DATABASE_URI_TYPE=$DATABASE_URI_TYPE \
+          -e DATABASE_USER=$DATABASE_USER \
+          -e DAATABASE_PASSWORD=$DATABASE_PASSWORD \
+          -e DATABASE_NAME=$DATABASE_NAME \
           --name=aid_alert-backend \
           aid-alert_backend:latest'
         env:
