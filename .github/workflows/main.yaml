@@ -31,7 +31,7 @@ jobs:
       - name: Check if container exists
         id: get_container_info
         run: |
-          if [ "$(docker ps -a -q" != '' ]; then
+          if [ "$(docker ps -a -q)" != '' ]; then
             echo "available=true" >> $GITHUB_OUTPUT;
           else
             echo "available=false" >> $GITHUB_OUTPUT;
