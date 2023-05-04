@@ -22,7 +22,7 @@ jobs:
         run: sh -c "docker ps | wc -l"
 
       - name: Stop old container
-        run: sh -c 'docker stop aid_alert-backend'
+        run: sh -c 'echo ${{ steps.get_docker_info.outputs.stdout }} && docker stop aid_alert-backend'
         if: ${{ steps.get_docker_info.outputs.stdout }} > 1
 
       - name: Start new containers
