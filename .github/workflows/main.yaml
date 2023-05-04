@@ -17,7 +17,7 @@ jobs:
 
       - name: Set variable date
         run: date +%s
-        
+        id: variable        
 
       - name: Dump GitHub context
         id: github_context_step
