@@ -44,11 +44,12 @@ jobs:
     if: ${{ needs.setup.outputs.container_existence }}
     steps:
       - name: Stop  old container
-        run: docker stop aid_alert-backend
+        run: docker stop $container_name
       
       - name: Remove old container
-        run: docker rm aid_alert-backend
+        run: docker rm $container_name
         #if: needs.setup.outputs.num_cont > 1
+  
   build: 
     runs-on: self-hosted
     name: Build docker container.
@@ -76,7 +77,7 @@ jobs:
           -e DATABASE_USER=$DATABASE_USER \
           -e DAATABASE_PASSWORD=$DATABASE_PASSWORD \
           -e DATABASE_NAME=$DATABASE_NAME \
-          --name=aid_alert-backend \
+          --name=$container_name \
           $container_name:$CONTAINER_VERSION'
         env:
           PORT: ${{ secrets.PORT || vars.PORT }} 
