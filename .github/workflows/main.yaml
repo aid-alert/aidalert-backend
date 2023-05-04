@@ -17,33 +17,13 @@ jobs:
         run: date +%s
         id: get_date
       
-      # - name: Set variables
-      #   run: | 
-      #     sh -c 'export PORT=$PORT 
-      #     export ENVIRONMENT=$ENVIRONMENT 
-      #     export LOG_MODE=$LOG_MODE
-      #     export LOG_FILE=$LOG_FILE
-      #     export DATABASE_URL=$DATABASE_URL
-      #     export DATABASE_URI_TYPE=$DATABASE_URI_TYPE
-      #     export DATABASE_USER=$DATABASE_USER
-      #     export DAATABASE_PASSWORD=$DATABASE_PASSWORD
-      #     export DATABASE_NAME=$DATABASE_NAME
-      #     export TAG_NUM=$CONTAINER_VERSION
-      #     export DATABASE_ROOT_PASSWORD=$DATABASE_ROOT_PASSWORD
-      #   env:
-      #     PORT: ${{ secrets.PORT || vars.PORT }} 
-      #     ENVIRONMENT: ${{ secrets.ENVIRONMENT || vars.ENVIRONMENT }} 
-      #     LOG_MODE: ${{ secrets.LOG_MODE || vars.LOG_MODE }}
-      #     LOG_FILE: ${{ secrets.LOG_FILE || vars.LOG_FILE }}
-      #     DATABASE_URL: ${{ secrets.DATABASE_URL || vars.DATABASE_URL }}
-      #     DATABASE_URI_TYPE: ${{ secrets.DATABASE_URI_TYPE || vars.DATABASE_URI_TYPE }}
-      #     DATABASE_USER: ${{ secrets.DATABASE_USER || vars.DATABASE_USER }}
-      #     DAATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || vars.DATABASE_PASSWORD }}
-      #     DATABASE_NAME: ${{ secrets.DATABASE_NAME || vars.DATABASE_NAME }}
-      #     DATABASE_ROOT_PASSWRD: ${{ secrets.DATABASE_ROOT_PASSWORD || vars.DATABASE_ROOT_PASSWORD }}
+      - name: Check if docker container exists
+        id: get_docker_info
+        run: sh -c "docker ps | awk -F '\n' '{print $2}'"
 
       - name: Stop old container
         run: sh -c 'docker stop aid_alert-backend'
+        if: ${{ step.get_docker_info.outputs.stdout }} != ""
 
       - name: Start new containers
         run: | 
