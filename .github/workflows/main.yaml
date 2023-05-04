@@ -31,7 +31,7 @@ jobs:
       - name: Check if container exists
         id: get_container_info
         run: |
-          if [ "$(docker ps -a -q -f name=$container_name)" != '' ]; then
+          if [ "$(docker ps -a -q" != '' ]; then
             echo "available=true" >> $GITHUB_OUTPUT;
           else
             echo "available=false" >> $GITHUB_OUTPUT;
@@ -41,7 +41,7 @@ jobs:
     runs-on: self-hosted
     name: Clean old container and build the new one.
     needs: setup
-    #if: ${{ needs.setup.outputs.container_existence }}
+    if: ${{ needs.setup.outputs.container_existence }}
     steps:
       - name: Stop  old container
         # run: docker stop $container_name
@@ -55,7 +55,9 @@ jobs:
   build: 
     runs-on: self-hosted
     name: Build docker container.
-    needs: setup
+    needs: 
+      - setup
+      - clean
     steps:
       - name: Docker build
         run: docker build . --tag=$container_name:${{ needs.setup.outputs.date }}
@@ -94,4 +96,4 @@ jobs:
           DAATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || vars.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME || vars.DATABASE_NAME }}
           DATABASE_ROOT_PASSWRD: ${{ secrets.DATABASE_ROOT_PASSWORD || vars.DATABASE_ROOT_PASSWORD }}
-          CONTAINER_VERSION: ${{ needs.setup.outputs.date }}
+          CONTAINER_VERSION: $GITHUB_SHA
