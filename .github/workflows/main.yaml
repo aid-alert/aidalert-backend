@@ -58,7 +58,6 @@ jobs:
     name: Deploy the new container.
     needs:
       - setup
-      - clean-and-build
     steps:
       - name: Start new containers
         run: | 
