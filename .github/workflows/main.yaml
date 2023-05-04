@@ -24,7 +24,7 @@ jobs:
         id: github_context_step
         run: echo $PORT
         env:
-          PORT: ${{ vars.DATABASE_NAME }}
+          PORT: ${{ secrets.DATABASE_NAME }}
 
       # - name: Test
       #   uses: ./.dev
