@@ -40,7 +40,7 @@ export interface Configuration {
 // check for the database password is set.
 if (process.env.DATABASE_PASSWORD == undefined) {
     console.log("[SETUP] Please setup database user password")
-    exit(100);
+    //exit(100);
 }
 
 var logMode: Log_Level; // default: LOG_MODE: All
