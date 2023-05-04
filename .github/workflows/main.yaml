@@ -44,7 +44,7 @@ jobs:
           DAATABASE_PASSWORD=$DATABASE_PASSWORD \
           DATABASE_NAME=$DATABASE_NAME \
           --name=aid_alert-backend \
-          aid-alert_backend:$CONTAINER_VERSION'
+          aid-alert_backend:latest'
         env:
           PORT: ${{ secrets.PORT || vars.PORT }} 
           ENVIRONMENT: ${{ secrets.ENVIRONMENT || vars.ENVIRONMENT }} 
