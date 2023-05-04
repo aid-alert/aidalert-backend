@@ -23,15 +23,10 @@ jobs:
       - name: Check if docker container exists
         id: get_docker_info
         run: echo "num_cont=$(docker ps | wc -l)" >> $GITHUB_OUTPUT
-      
-      - name: check if it works
-        env:
-          OUTPUT1: ${{ steps.get_docker_info.outputs.num_cont }}
-        run: echo "$OUTPUT1"
 
       - name: Stop old container
-        run: sh -c 'echo ${{ steps.get_docker_info.outputs.num_cont }} && docker stop aid_alert-backend'
         if: ${{ steps.get_docker_info.outputs.num_cont }} > 1
+        run: sh -c 'docker stop aid_alert-backend'
 
       - name: Start new containers
         run: | 
