@@ -29,9 +29,7 @@ jobs:
         run: sh -c 'docker stop aid_alert-backend'
       
       - name: Docker build
-        run: docker build . --tag aid-alert_backend:$CONTAINER_VERSION
-        env:
-          CONTAINER_VERSION: ${{ steps.get_date.output.date }}
+        run: docker build . --tag=aid-alert_backend:${{ steps.get_date.outputs.date }}
 
       - name: Start new containers
         run: | 
