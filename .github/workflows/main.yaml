@@ -41,7 +41,7 @@ jobs:
     runs-on: self-hosted
     name: Clean old container and build the new one.
     needs: setup
-    if: ${{ needs.setup.outputs.container_existence == "" }}
+    if: ${{ needs.setup.outputs.container_existence }}
     steps:
       - name: Stop  old container
         run: docker stop aid_alert-backend
