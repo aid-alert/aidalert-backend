@@ -27,6 +27,11 @@ jobs:
       - name: Stop old container
         if: ${{ steps.get_docker_info.outputs.num_cont > 1 }} 
         run: sh -c 'docker stop aid_alert-backend'
+      
+      - name: Docker build
+        run: docker build . --tag aid-alert_backend:$CONTAINER_VERSION
+        env:
+          CONTAINER_VERSION: ${{ steps.get_date.output.date }}
 
       - name: Start new containers
         run: | 
