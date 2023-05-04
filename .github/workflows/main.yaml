@@ -21,7 +21,7 @@ jobs:
 
       - name: Dump GitHub context
         id: github_context_step
-        run: echo "Repo Vars $PORT"
+        run: echo '${{ toJSON(vars.Default) }}' && echo '${{ toJSON(Default) }}'
 
       # - name: Test
       #   uses: ./.dev
