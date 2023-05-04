@@ -30,7 +30,12 @@ jobs:
       
       - name: Check if container exists
         id: get_container_info
-        run: echo "existence=$(docker ps -a -q -f name=$container_name)" >> $GITHUB_OUTPUT
+        run: |
+          if [ "$(docker ps -a -q -f name=$container_name)" != '' ]; then
+            echo "available=true" >> $GITHUB_OUTPUT;
+          else
+            echo "available=false" >> $GITHUB_OUTPUT;
+          fi
 
   clean-and-build:
     runs-on: self-hosted
