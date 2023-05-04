@@ -28,8 +28,11 @@ jobs:
     name: Clean old container and build the new one.
     needs: setup
     steps:
-      - name: Stop and remove old container
-        run: sh -c 'docker stop aid_alert-backend && docker rm aid_alert-backend'
+      - name: Stop  old container
+        run: docker stop aid_alert-backend
+      
+      - name: Remove old container
+        run: docker rm aid_alert-backend
         #if: needs.setup.outputs.num_cont > 1
       
       - name: Docker build
