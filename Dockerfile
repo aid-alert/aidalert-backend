@@ -13,4 +13,4 @@ ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 RUN npm ci
 
-CMD [ "node", "dist/index.js" ]
+CMD [ "node", "dist/source/index.js" ]
