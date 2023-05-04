@@ -4,16 +4,15 @@ import { tryConnectDB } from './services/db';
 
 // Controllers
 import { alertRouter } from './routers/alertsRouter';
-import { config } from 'dotenv';
 
 const app: Express = express();
 const port = Config.PORT;
 
+console.log(Config)
 tryConnectDB();
 
 // Default
 app.use(express.json());
-
 
 app.use("/alerts", alertRouter);
 
