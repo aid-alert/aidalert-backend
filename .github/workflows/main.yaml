@@ -5,9 +5,9 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-deploy:
+  setup:
     runs-on: self-hosted
-    name: Test and Build docker containers
+    name: Setup Docker container ground
     environment: Default
     outputs:
       date: ${{ steps.get_date.outputs.date }}
@@ -23,14 +23,25 @@ jobs:
       - name: Check if docker container exists
         id: get_docker_info
         run: echo "num_cont=$(docker ps | wc -l)" >> $GITHUB_OUTPUT
-
+  clean-and-build:
+    runs-on: self-hosted
+    name: Clean old container and build the new one.
+    needs: setup
+    steps:
       - name: Stop and remove old container
         run: sh -c 'docker stop aid_alert-backend && docker rm aid_alert-backend'
-        if: ${{ steps.get_docker_info.outputs.num_cont > 1 }} 
+        if: needs.setup.outputs.num_cont > 1
       
       - name: Docker build
         run: docker build . --tag=aid-alert_backend:${{ steps.get_date.outputs.date }}
-
+  
+  deploy:
+    runs-on: self-hosted
+    name: Deploy the new container.
+    needs:
+      - setup
+      - clean-and-build
+    steps:
       - name: Start new containers
         run: | 
           sh -c 'docker run \
@@ -56,4 +67,4 @@ jobs:
           DAATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || vars.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME || vars.DATABASE_NAME }}
           DATABASE_ROOT_PASSWRD: ${{ secrets.DATABASE_ROOT_PASSWORD || vars.DATABASE_ROOT_PASSWORD }}
-          CONTAINER_VERSION: ${{ steps.get_date.outputs.date }}
+          CONTAINER_VERSION: ${{ needs.setup.outputs.date }}
