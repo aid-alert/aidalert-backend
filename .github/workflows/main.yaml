@@ -23,7 +23,7 @@ jobs:
 
       - name: Stop old container
         run: sh -c 'docker stop aid_alert-backend'
-        if: ${{ step.get_docker_info.outputs.stdout }} != ""
+        if: ${{ steps.get_docker_info.outputs.stdout }} != ""
 
       - name: Start new containers
         run: | 
