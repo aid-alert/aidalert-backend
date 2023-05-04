@@ -25,7 +25,7 @@ jobs:
         run: echo "num_cont=$(docker ps | wc -l)" >> $GITHUB_OUTPUT
 
       - name: Stop old container
-        if: ${{ steps.get_docker_info.outputs.num_cont }} > 1
+        if: ${{ steps.get_docker_info.outputs.num_cont > 1 }} 
         run: sh -c 'docker stop aid_alert-backend'
 
       - name: Start new containers
