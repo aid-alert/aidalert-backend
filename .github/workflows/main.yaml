@@ -41,13 +41,15 @@ jobs:
     runs-on: self-hosted
     name: Clean old container and build the new one.
     needs: setup
-    if: ${{ needs.setup.outputs.container_existence }}
+    #if: ${{ needs.setup.outputs.container_existence }}
     steps:
       - name: Stop  old container
-        run: docker stop $container_name
+        # run: docker stop $container_name
+        run: docker stop $(docker ps -a -q)
       
       - name: Remove old container
-        run: docker rm $container_name
+        # run: docker rm $container_name
+        run: docker rm $(docker ps -a -q)
         #if: needs.setup.outputs.num_cont > 1
   
   build: 
