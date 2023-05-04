@@ -4,6 +4,9 @@ on:
   pull_request: 
     branches: [ "main" ]
 
+env:
+  container_name: aid-alert_backend
+
 jobs:
   setup:
     runs-on: self-hosted
@@ -12,6 +15,7 @@ jobs:
     outputs:
       date: ${{ steps.get_date.outputs.date }}
       num_cont: ${{ steps.get_docker_info.outputs.num_cont }}
+      container_existence: ${{ steps.get_container_info.outputs.}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,10 +27,16 @@ jobs:
       - name: Check if docker container exists
         id: get_docker_info
         run: echo "num_cont=$(docker ps | wc -l)" >> $GITHUB_OUTPUT
+      
+      - name: Check if container exists
+        id: get_container_info
+        run: echo "existence=$(docker ps -a -q -f name=$container_name)" >> $GITHUB_OUTPUT
+
   clean-and-build:
     runs-on: self-hosted
     name: Clean old container and build the new one.
     needs: setup
+    if: ${{ needs.setup.outputs.container_existence == "" }}
     steps:
       - name: Stop  old container
         run: docker stop aid_alert-backend
@@ -36,7 +46,7 @@ jobs:
         #if: needs.setup.outputs.num_cont > 1
       
       - name: Docker build
-        run: docker build . --tag=aid-alert_backend:${{ needs.setup.outputs.date }}
+        run: docker build . --tag=$container_name:${{ needs.setup.outputs.date }}
   
   deploy:
     runs-on: self-hosted
@@ -58,7 +68,7 @@ jobs:
           -e DAATABASE_PASSWORD=$DATABASE_PASSWORD \
           -e DATABASE_NAME=$DATABASE_NAME \
           --name=aid_alert-backend \
-          aid-alert_backend:$CONTAINER_VERSION'
+          $container_name:$CONTAINER_VERSION'
         env:
           PORT: ${{ secrets.PORT || vars.PORT }} 
           ENVIRONMENT: ${{ secrets.ENVIRONMENT || vars.ENVIRONMENT }} 
