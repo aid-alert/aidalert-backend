@@ -57,7 +57,6 @@ jobs:
     name: Build docker container.
     needs: 
       - setup
-      - clean
     steps:
       - name: Docker build
         run: docker build . --tag=$container_name:${{ needs.setup.outputs.date }}
@@ -65,9 +64,11 @@ jobs:
   deploy:
     runs-on: self-hosted
     name: Deploy the new container.
+    if: ${{ always() }}
     needs:
       - setup
       - build
+      - clean
     steps:
       - name: Start new containers
         run: | 
