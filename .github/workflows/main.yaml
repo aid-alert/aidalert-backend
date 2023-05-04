@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 env:
-  container_name: aid-alert_backend
+  CONTAINER_NAME: aid-alert_backend
 
 jobs:
   setup:
@@ -13,20 +13,10 @@ jobs:
     name: Setup Docker container ground
     environment: Default
     outputs:
-      date: ${{ steps.get_date.outputs.date }}
-      num_cont: ${{ steps.get_docker_info.outputs.num_cont }}
       container_existence: ${{ steps.get_container_info.outputs.existence }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Set variable date
-        run: echo "date=$(date +%s)" >> $GITHUB_OUTPUT
-        id: get_date
-      
-      - name: Check if docker container exists
-        id: get_docker_info
-        run: echo "num_cont=$(docker ps | wc -l)" >> $GITHUB_OUTPUT
       
       - name: Check if container exists
         id: get_container_info
@@ -44,13 +34,10 @@ jobs:
     if: ${{ needs.setup.outputs.container_existence }}
     steps:
       - name: Stop  old container
-        # run: docker stop $container_name
         run: docker stop $(docker ps -a -q)
       
       - name: Remove old container
-        # run: docker rm $container_name
         run: docker rm $(docker ps -a -q)
-        #if: needs.setup.outputs.num_cont > 1
   
   build: 
     runs-on: self-hosted
@@ -59,7 +46,7 @@ jobs:
       - setup
     steps:
       - name: Docker build
-        run: docker build . --tag=$container_name:${{ github.sha }}
+        run: docker build . --tag=$CONTAINER_NAME:${{ github.sha }}
   
   deploy:
     runs-on: self-hosted
@@ -81,10 +68,10 @@ jobs:
           -e DATABASE_USER=$DATABASE_USER \
           -e DAATABASE_PASSWORD=$DATABASE_PASSWORD \
           -e DATABASE_NAME=$DATABASE_NAME \
-          --name=$container_name \
+          --name=$CONTAINER_NAME \
           --port 8080:8080 \
           --detach
-          $container_name:$CONTAINER_VERSION'
+          $CONTAINER_NAME:$CONTAINER_VERSION'
         env:
           PORT: ${{ secrets.PORT || vars.PORT }} 
           ENVIRONMENT: ${{ secrets.ENVIRONMENT || vars.ENVIRONMENT }} 
