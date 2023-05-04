@@ -36,7 +36,7 @@ jobs:
         #if: needs.setup.outputs.num_cont > 1
       
       - name: Docker build
-        run: docker build . --tag=aid-alert_backend:${{ steps.get_date.outputs.date }}
+        run: docker build . --tag=aid-alert_backend:${{ needs.setup.outputs.date }}
   
   deploy:
     runs-on: self-hosted
