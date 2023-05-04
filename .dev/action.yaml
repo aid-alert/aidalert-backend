@@ -1,9 +1,0 @@
-# .dev/action.yml
-name: 'Node Backednd Test-Build'
-description: 'EXecute the test the docker-backend container'
-outputs:
-  time: # id of output
-    description: 'Testin the backend'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'

@@ -4,11 +4,8 @@ on:
   pull_request: 
     branches: [ "main" ]
 
-env:
-  CONTAINER_VERSION: $(date +%s)
-
 jobs:
-  hello_world_job:
+  build-and-deploy:
     runs-on: self-hosted
     name: Test and Build docker containers
     environment: Default
@@ -17,20 +14,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set variable date
-        run: date +%s
-        id: variable        
-
-      - name: Dump GitHub context
-        id: github_context_step
-        run: echo $PORT
-        env:
-          PORT: ${{ secrets.DATABASE_NAME }}
-
-      # - name: Test
-      #   uses: ./.dev
-      
-      # - name: Build Image
-      #   run: sh -c 'docker build . --file Dockerfile --tag aid-alert_backend:$CONTAINER_VERSION'
+        run: date +%s > $GITHUB_OUTPUT
+        id: get_date
       
       - name: Set variables
         run: | 
@@ -60,30 +45,32 @@ jobs:
       - name: Docker compose
         run: sh -c 'docker compose up -d --remove-orphans'
 
-      # - name: Stop old container
-      #   run: sh -c 'docker stop aid_alert-backend'
+      - name: Stop old container
+        run: sh -c 'docker stop aid_alert-backend'
 
-      # - name: Start New dev containers
-      #   run: | 
-      #     sh -c 'docker run 
-      #     -e PORT=$PORT 
-      #     -e ENVIRONMENT=$ENVIRONMENT 
-      #     -e LOG_MODE=$LOG_MODE
-      #     -e LOG_FILE=$LOG_FILE
-      #     -e DATABASE_URL=$DATABASE_URL
-      #     -e DATABASE_URI_TYPE=$DATABASE_URI_TYPE
-      #     -e DATABASE_USER=$DATABASE_USER
-      #     -e DAATABASE_PASSWORD=$DATABASE_PASSWORD
-      #     -e DATABASE_NAME=$DATABASE_NAME
-      #     --name=aid_alert-backend
-      #     aid-alert_backend:$CONTAINER_VERSION'
-      #   env:
-      #     PORT: ${{ secrets.PORT }} 
-      #     ENVIRONMENT: ${{ secrets.ENVIRONMENT }} 
-      #     LOG_MODE: ${{ secrets.LOG_MODE }}
-      #     LOG_FILE: ${{ secrets.LOG_FILE }}
-      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      #     DATABASE_URI_TYPE: ${{ secrets.DATABASE_URI_TYPE }}
-      #     DATABASE_USER: ${{ secrets.DATABASE_USER }}
-      #     DAATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-      #     DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      - name: Start New dev containers
+        run: | 
+          sh -c 'docker run 
+          -e PORT=$PORT 
+          -e ENVIRONMENT=$ENVIRONMENT 
+          -e LOG_MODE=$LOG_MODE
+          -e LOG_FILE=$LOG_FILE
+          -e DATABASE_URL=$DATABASE_URL
+          -e DATABASE_URI_TYPE=$DATABASE_URI_TYPE
+          -e DATABASE_USER=$DATABASE_USER
+          -e DAATABASE_PASSWORD=$DATABASE_PASSWORD
+          -e DATABASE_NAME=$DATABASE_NAME
+          --name=aid_alert-backend
+          aid-alert_backend:$CONTAINER_VERSION'
+        env:
+          PORT: ${{ secrets.PORT || vars.PORT }} 
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT || vars.ENVIRONMENT }} 
+          LOG_MODE: ${{ secrets.LOG_MODE || vars.LOG_MODE }}
+          LOG_FILE: ${{ secrets.LOG_FILE || vars.LOG_FILE }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL || vars.DATABASE_URL }}
+          DATABASE_URI_TYPE: ${{ secrets.DATABASE_URI_TYPE || vars.DATABASE_URI_TYPE }}
+          DATABASE_USER: ${{ secrets.DATABASE_USER || vars.DATABASE_USER }}
+          DAATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || vars.DATABASE_PASSWORD }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME || vars.DATABASE_NAME }}
+          DATABASE_ROOT_PASSWRD: ${{ secrets.DATABASE_ROOT_PASSWORD || vars.DATABASE_ROOT_PASSWORD }}
+          CONTAINER_VERSION: ${{ steps.get_date.outputs.stdout }}

@@ -1,6 +1,6 @@
 FROM node:latest
 
-COPY ./app /app
+COPY . /app
 
 WORKDIR /app
 
