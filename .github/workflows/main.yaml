@@ -19,11 +19,11 @@ jobs:
       
       - name: Check if docker container exists
         id: get_docker_info
-        run: sh -c "docker ps | wc -l"
+        run: sh -c "num_cont=$(docker ps | wc -l); echo $num_cont >> $GITHUB_OUTPUT"
 
       - name: Stop old container
-        run: sh -c 'echo ${{ steps.get_docker_info.outputs.stdout }} && docker stop aid_alert-backend'
-        if: ${{ steps.get_docker_info.outputs.stdout }} > 1
+        run: sh -c 'echo ${{ steps.get_docker_info.outputs.num_cont }} && docker stop aid_alert-backend'
+        if: ${{ steps.get_docker_info.outputs.num_cont }} > 1
 
       - name: Start new containers
         run: | 
@@ -50,4 +50,4 @@ jobs:
           DAATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || vars.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME || vars.DATABASE_NAME }}
           DATABASE_ROOT_PASSWRD: ${{ secrets.DATABASE_ROOT_PASSWORD || vars.DATABASE_ROOT_PASSWORD }}
-          CONTAINER_VERSION: ${{ steps.get_date.outputs.stdout }}
+          CONTAINER_VERSION: ${{ steps.get_date.outputs.num_cont }}
