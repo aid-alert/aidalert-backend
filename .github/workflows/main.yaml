@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Stop and remove old container
         run: sh -c 'docker stop aid_alert-backend && docker rm aid_alert-backend'
-        if: needs.setup.outputs.num_cont > 1
+        #if: needs.setup.outputs.num_cont > 1
       
       - name: Docker build
         run: docker build . --tag=aid-alert_backend:${{ steps.get_date.outputs.date }}
