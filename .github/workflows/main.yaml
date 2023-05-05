@@ -71,7 +71,7 @@ jobs:
           -e DATABASE_NAME=$DATABASE_NAME \
           --name=$CONTAINER_NAME \
           -p 8080:8080 \
-          --restways
+          --restart always
           --detach \
           $CONTAINER_NAME:$CONTAINER_VERSION
         env:
