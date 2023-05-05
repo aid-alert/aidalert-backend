@@ -1,7 +1,7 @@
 import { connect } from "mongoose";
+import { Config } from "../config";
 
-// const connString = Config.DATABASE_URI_TYPE + "://" + Config.DATABASE_URL + ":" + Config.DATABASE_PORT + "/" + Config.DATABASE_NAME;
-const connString = "mongodb://mongo:27017/alerts";
+const connString = Config.DATABASE_URL;
 
 console.log(`[server] The default connection is with the URI: ${connString}`);
 
