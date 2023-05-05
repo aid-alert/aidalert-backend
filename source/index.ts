@@ -1,4 +1,4 @@
-import express, { Express, Router } from 'express';
+import express, { Express } from 'express';
 import { Config } from './config';
 import { tryConnectDB } from './services/db';
 
@@ -8,8 +8,7 @@ import { alertRouter } from './routers/alertsRouter';
 const app: Express = express();
 const port = Config.PORT;
 
-console.log(Config)
-//tryConnectDB();
+tryConnectDB();
 
 // Default
 app.use(express.json());

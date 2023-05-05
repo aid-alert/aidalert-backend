@@ -1,9 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import {Alert} from '../models/alertSchema';
 
-export const alertGet = (req: Request, res: Response, next: NextFunction) => {
+export const alertGet = async (req: Request, res: Response, next: NextFunction) => {
+
+    const allAlerts = await Alert.find({}).exec();
+
     res.status(200)
-    res.json({"status": "200 ok", "message": "No Alert to see"});
+    // if(allAlerts.length == 0 )
+    //     res.json({"status": "200 ok", "body": "No Alert to see"});
+    // else
+    // more
+        res.json(
+        {
+            "status": "200 ok", 
+            "body": allAlerts
+        });
 } 
 
 export const alertPost = async (req: Request, res: Response, next: NextFunction) => {
@@ -14,9 +25,11 @@ export const alertPost = async (req: Request, res: Response, next: NextFunction)
         datetime: req.body["datetime"],
         location: req.body["location"],
         hash: req.body["hash"]
-    })
+    });
 
-    await newAlert.save();
+    const query_res = await newAlert.save();
+
+    console.log(query_res);
 
     res.status(200).json({"status": "200 ok", "message": "all saved"});
 }

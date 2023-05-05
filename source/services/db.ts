@@ -1,13 +1,17 @@
 import { connect } from "mongoose";
+import { Config } from "../config";
 
-// const connString = Config.DATABASE_URI_TYPE + "://" + Config.DATABASE_URL + ":" + Config.DATABASE_PORT + "/" + Config.DATABASE_NAME;
-const connString = "mongodb://mongo:27017/alerts";
+const connString = Config.DATABASE_URL;
 
 console.log(`[server] The default connection is with the URI: ${connString}`);
 
 export const tryConnectDB = async () => {
     console.log("[server] Try to connect to DB");
-    await connect(connString)
-        .catch(error => console.log(`[server] Database connection errors: ${error}`))
-        .then(() => console.log("[server] Default connection established"));
+    try {
+        await connect(connString)
+            .catch(error => console.log(`[server] Database connection errors: ${error}`))
+            .then(() => console.log("[server] Default connection established"));
+    } catch (err) {
+        console.log("[Server] Error connecting to db: ", err);
+    }
   }

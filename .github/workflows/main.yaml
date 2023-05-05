@@ -13,7 +13,7 @@ jobs:
     name: Setup Docker container ground
     environment: Default
     outputs:
-      container_existence: ${{ steps.get_container_info.outputs.existence }}
+      container_existence: ${{ steps.get_container_info.outputs.available }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -51,7 +51,8 @@ jobs:
   deploy:
     runs-on: self-hosted
     name: Deploy the new container.
-    if: ${{ always() }}
+    if: ${{ always() }}docker
+    environment: Default
     needs:
       - build
       - clean
@@ -70,17 +71,18 @@ jobs:
           -e DATABASE_NAME=$DATABASE_NAME \
           --name=$CONTAINER_NAME \
           -p 8080:8080 \
+          --restart always \
           --detach \
           $CONTAINER_NAME:$CONTAINER_VERSION
         env:
-          PORT: ${{ secrets.PORT || vars.PORT }} 
-          ENVIRONMENT: ${{ secrets.ENVIRONMENT || vars.ENVIRONMENT }} 
-          LOG_MODE: ${{ secrets.LOG_MODE || vars.LOG_MODE }}
-          LOG_FILE: ${{ secrets.LOG_FILE || vars.LOG_FILE }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL || vars.DATABASE_URL }}
-          DATABASE_URI_TYPE: ${{ secrets.DATABASE_URI_TYPE || vars.DATABASE_URI_TYPE }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER || vars.DATABASE_USER }}
-          DAATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD || vars.DATABASE_PASSWORD }}
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME || vars.DATABASE_NAME }}
-          DATABASE_ROOT_PASSWRD: ${{ secrets.DATABASE_ROOT_PASSWORD || vars.DATABASE_ROOT_PASSWORD }}
+          PORT: ${{ vars.PORT }} 
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }} 
+          LOG_MODE: ${{ vars.LOG_MODE }}
+          LOG_FILE: ${{ vars.LOG_FILE }}
+          DATABASE_URL: ${{ vars.DATABASE_URL }}
+          DATABASE_URI_TYPE: ${{ vars.DATABASE_URI_TYPE }}
+          DATABASE_USER: ${{ secrets.DATABASE_USER}}
+          DAATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD}}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_ROOT_PASSWRD: ${{ secrets.DATABASE_ROOT_PASSWORD }}
           CONTAINER_VERSION: ${{ github.sha }}
